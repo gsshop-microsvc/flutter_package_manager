@@ -52,7 +52,18 @@ class PackageManagerPlugin: FlutterPlugin, MethodCallHandler {
                 } catch(e: Exception) {
                     print(e.localizedMessage)
                 }
-                result.success(pi?.versionName)
+                
+                if (pi != null) {
+                    result.success(object: HashMap<String, Object>() {
+                        init {
+                            put("versionName", pi.versionName as Object)
+                            put("packageName", pi.packageName as Object)
+                            put("versionCode", pi.versionCode as Object)
+                        }
+                    })
+                } else {
+                    result.success(null)
+                }
             }
             else -> result.notImplemented()
         }

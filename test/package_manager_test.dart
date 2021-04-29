@@ -7,17 +7,14 @@ void main() {
 
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  setUp(() {
-    channel.setMockMethodCallHandler((MethodCall methodCall) async {
-      return '42';
-    });
-  });
+  setUp(() {});
 
   tearDown(() {
     channel.setMockMethodCallHandler(null);
   });
 
-  test('getPlatformVersion', () async {
-    expect(await PackageManager.getPackageInfo("com.kakao.talk"), '42');
+  test('getPackageInfo', () async {
+    var info = await PackageManager.getPackageInfo("com.kakao.talk");
+    expect(info?.packageName, 'com.kakao.talk');
   });
 }
