@@ -42,4 +42,10 @@ class PackageManager {
 
     return result;
   }
+
+  static Future<void> startIntent(String uri) async {
+    await _channel.invokeMethod('startIntent', <String, dynamic>{
+      'uri': uri,
+    });
+  }
 }
