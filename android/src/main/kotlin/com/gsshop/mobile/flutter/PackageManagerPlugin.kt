@@ -66,35 +66,63 @@ class PackageManagerPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
     private fun startIntent(uri: String?, result: Result) {
         try {
-            var intent: Intent? = null;
-            var ri: ResolveInfo? = null;
+            var intent: Intent? = null
+            var ri: ResolveInfo? = null
 
-            try {
-                intent = Intent.parseUri(uri, Intent.URI_INTENT_SCHEME)
-            } catch (ex: URISyntaxException) {
-                result.success("uri not match");
-                return
-            }
-
-            if (intent != null) {
-                var packagename = intent.getPackage()
-                if (packagename != null) {
-                    ri = mContext?.packageManager?.resolveActivity(intent, 0)
+            if ( uri != null && uri.startsWith("intent:") ) {
+                try {
+                    intent = Intent.parseUri(uri, Intent.URI_INTENT_SCHEME)
+                } catch (ex: URISyntaxException) {
+                    result.success("uri not match")
+                    return
                 }
 
-                if (ri != null) {
-                    var androidIntent = Intent(Intent.ACTION_VIEW, Uri.parse(intent.getDataString()))
-                    mActivity?.startActivity(androidIntent)
-                    result.success("start activity")
-                } else {
-                    // not installed
-                    var androidIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://search?q=pname:" + packagename))
-                    mActivity?.startActivity(androidIntent)
-                    result.success("start market")
+                if (intent != null) {
+                    var packagename = intent.getPackage()
+                    var scheme = intent.getScheme()
+
+                    try {
+                        var androidIntent = Intent(Intent.ACTION_VIEW, Uri.parse(intent.getDataString()))
+                        mActivity?.startActivity(androidIntent)
+                        //Log.d("---777---", "start activity")
+                        result.success("start activity")
+                    } catch (e: Exception) {
+                        // market 으로 이동
+                        var androidIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://search?q=pname:" + packagename))
+                        mActivity?.startActivity(androidIntent)
+                        //Log.d("---777---", "start market")
+                        result.success("start market")
+                    }
+
+                    /* TODO 동작을 안함
+                    if (packagename != null) {
+                        Log.d("---777---", packagename)
+                        ri = mContext?.packageManager?.resolveActivity(intent, 0)
+                    }
+
+                    if (ri != null) {
+                        var androidIntent = Intent(Intent.ACTION_VIEW, Uri.parse(intent.getDataString()))
+                        mActivity?.startActivity(androidIntent)
+                        Log.d("---777---", "start activity")
+                        result.success("start activity")
+                    } else {
+                        // not installed
+                        Log.d("---777---", "start market")
+                        if (packagename != null && scheme !=null ) {
+                            var androidIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://search?q=pname:" + packagename))
+                            mActivity?.startActivity(androidIntent)
+                            result.success("start market")
+                        }
+                    }
+                    */
                 }
+            } else {
+                var androidIntent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+                mActivity?.startActivity(androidIntent)
+                result.success("start activity")
             }
         } catch (e: ActivityNotFoundException) {
-            e.printStackTrace();
+            e.printStackTrace()
             result.success("activity not found")
         }
     }
