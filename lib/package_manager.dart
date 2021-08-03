@@ -25,6 +25,25 @@ class PackageInfo extends Equatable {
   }
 }
 
+class IntentResult extends Equatable {
+  final String packageName;
+  final String message;
+
+  IntentResult(this.packageName, this.message);
+
+  @override
+  List<Object?> get props => [];
+
+  static IntentResult fromJson(Map<String, dynamic> json) {
+    var flexible = IntentResult(
+      json['packageName'] as String,
+      json['message'] as String,
+    );
+
+    return flexible;
+  }
+}
+
 class PackageManager {
   static const MethodChannel _channel =
       const MethodChannel('com.gsshop.mobile.flutter.package_manager');
@@ -43,9 +62,14 @@ class PackageManager {
     return result;
   }
 
-  static Future<void> startIntent(String uri) async {
-    await _channel.invokeMethod('startIntent', <String, dynamic>{
+  static Future<IntentResult> startIntent(String uri) async {
+    IntentResult result;
+    final Map<dynamic, dynamic> info =
+        await _channel.invokeMethod('startIntent', <String, dynamic>{
       'uri': uri,
     });
+
+    result = IntentResult.fromJson(info.cast<String, dynamic>());
+    return result;
   }
 }
