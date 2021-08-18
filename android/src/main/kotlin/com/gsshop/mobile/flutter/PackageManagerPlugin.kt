@@ -88,7 +88,7 @@ class PackageManagerPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             }
         } catch (e: ActivityNotFoundException) {
             e.printStackTrace()
-            message = "ActivityNotFoundException"
+            message = "NotInstalled"
         }
 
         result.success(object: HashMap<String, Object>() {
