@@ -72,4 +72,11 @@ class PackageManager {
     result = IntentResult.fromJson(info.cast<String, dynamic>());
     return result;
   }
+
+  static Future<bool> canOpenURL(String uri) async {
+    bool result = await _channel.invokeMethod('canOpenURL', <String, dynamic>{
+      'uri': uri,
+    });
+    return result;
+  }
 }

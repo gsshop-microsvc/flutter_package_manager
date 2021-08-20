@@ -26,6 +26,13 @@ public class SwiftPackageManagerPlugin: NSObject, FlutterPlugin {
         }
         self.result?(dic)
       }
+    } else if (call.method == "canOpenURL") {
+      if let arguments = call.arguments as? [String:Any] {
+        let uri = arguments["uri"] as? String ?? ""
+        let targetUri = NSURL(string: uri)
+        let canOpen = UIApplication.shared.canOpenURL(targetUri as! URL)
+        self.result?(canOpen)
+      }
     }
   }
 }

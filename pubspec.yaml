@@ -1,6 +1,6 @@
 name: package_manager
 description: A flutter plugin for package manager.
-version: 0.0.6
+version: 0.0.7
 author:
 homepage: https://github.com/gsshop-microsvc/flutter_package_manager
 
