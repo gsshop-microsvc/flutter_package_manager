@@ -79,7 +79,9 @@ class PackageManagerPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
                 }
 
                 if (intent != null) {
-                    packagename = intent.getPackage()
+                    if (null != intent.getPackage()) {
+                        packagename = intent.getPackage()
+                    }
                     Log.d("--intent---", intent.getDataString().toString())
                     var androidIntent = Intent(Intent.ACTION_VIEW, Uri.parse(intent.getDataString()))
                     mActivity?.startActivity(androidIntent)
