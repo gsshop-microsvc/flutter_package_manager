@@ -53,15 +53,14 @@ class PackageManagerPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     }
 
     override fun onDetachedFromActivity() {
-        TODO("Not yet implemented")
+        mActivity = null
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
-        TODO("Not yet implemented")
     }
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-        TODO("Not yet implemented")
+        mActivity = binding.activity
     }
 
     private fun startIntent(uri: String?, result: Result) {
@@ -81,8 +80,11 @@ class PackageManagerPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
                 if (intent != null) {
                     if (null != intent.getPackage()) {
                         packagename = intent.getPackage()
+                        if (packagename != null) {
+                            Log.d("---packagename---", packagename)
+                        }
                     }
-                    Log.d("--intent---", intent.getDataString().toString())
+                    Log.d("---intent---", intent.getDataString().toString())
                     var androidIntent = Intent(Intent.ACTION_VIEW, Uri.parse(intent.getDataString()))
                     mActivity?.startActivity(androidIntent)
                 }
